@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#122e25"><title>卫眸 · 卫星火区识别</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header><div class="header-core"><div class="brand"><span class="brand-icon" aria-hidden="true"><i></i></span><span>卫眸</span><span class="brand-sep"></span><span class="brand-en">SENTINEL-2</span></div><a href="https://github.com/Minoro/transfer-learning-landsat8-sentinel2" target="_blank" rel="noreferrer">模型来源 ↗</a></div></header>
+<main>
+<section class="intro"><div><h1>卫星火区识别</h1><p>切换真实卫星影像，比较 AI 圈出的疑似火区与专家标注。</p></div><div class="pipeline"><span class="dot"></span> U-Net <span>/</span> 20 m</div></section>
+<section class="selector" aria-label="选择测试切片">
+<button type="button" class="sample selected" data-case="fire" aria-pressed="true"><img src="./samples/fire/swir.png" alt=""><span><b>有火切片</b><small>T12TUQ · 2020.08.13</small></span><em aria-hidden="true">✓</em></button>
+<button type="button" class="sample" data-case="clear" aria-pressed="false"><img src="./samples/clear/swir.png" alt=""><span><b>无火切片</b><small>T52VFQ · 2020.08.21</small></span><em aria-hidden="true">✓</em></button>
+</section>
+<div class="workspace">
+<section class="visual" aria-label="卫星影像查看器">
+<div class="visual-head"><h2>影像对照</h2><div class="modes" aria-label="显示图层"><button data-mode="original" aria-pressed="false">原始影像</button><button class="active" data-mode="prediction" aria-pressed="true">AI 预测</button><button data-mode="compare" aria-pressed="false">标注对照</button></div></div>
+<div class="viewer"><div class="north" aria-label="上方为网格北">↑ N</div><div class="viewbox">
+<canvas id="scene" width="512" height="512" tabindex="0" aria-label="卫星影像，点击像素查看坐标，也可用方向键选择"></canvas>
+</div><div class="scale"><i id="scale-line"></i><span id="scale-text"></span></div><button id="zoom" type="button" hidden></button></div>
+<div class="legend" id="legend"></div>
+<div class="coordinate"><button id="locate" type="button" hidden>定位最大火斑</button><output id="coordinate">点选影像查看经纬度</output><a id="map" hidden target="_blank" rel="noreferrer">查看地图 ↗</a></div>
+</section>
+<aside><div class="result-head"><h2>识别结果</h2><span id="origin">已保存的实测</span></div>
+<p id="verdict" class="verdict">读取中…</p>
+<div class="key-stats"><div><small>AI 判火像素</small><strong id="count-p">—</strong></div><div><small>人工火像素</small><strong id="count-r">—</strong></div></div>
+<dl class="breakdown"><div><dt><i class="teal"></i>正确检出</dt><dd id="tp">—</dd></div><div><dt><i class="amber"></i>误报</dt><dd id="fp">—</dd></div><div><dt><i class="pink"></i>漏检</dt><dd id="fn">—</dd></div></dl>
+<p id="interpret" class="interpret"></p>
+<button class="run" id="run" disabled>运行 AI 识别 <span>→</span></button><div id="run-status" role="status" aria-live="polite">首次复算需加载约 138 MB 模型。</div>
+</aside></div>
+<details class="method"><summary>影像与判定方法</summary><dl><div><dt>切片编号</dt><dd id="case-id"></dd></div><div><dt>观测时间</dt><dd id="time"></dd></div><div><dt>有效观测</dt><dd id="coverage"></dd></div><div><dt>模型输入</dt><dd>B12、B11、B8A 三个波段，20 米网格。任一波段为零时跳过该像素。</dd></div><div><dt>判定依据</dt><dd>模型得分大于 0.5 时判为疑似活动火。只有评估阶段使用人工标注。页面初次显示本地实测结果，点击运行后使用原模型权重在浏览器内独立计算。</dd></div></dl></details>
+<footer><span>数据与模型 · Fusioka 等，2024</span><span>Sentinel-2 MSI</span></footer>
+</main>
+<script src="./app.js" defer></script>
+</body></html>
