@@ -1,6 +1,6 @@
 # 卫眸 · 卫星火区识别
 
-这份演示用同一套模型分析两张公开的 Sentinel-2 测试切片。页面打开时提供本地 TensorFlow 实测图层，运行按钮在浏览器 Web Worker 中执行完整的 U-Net 推理。首次运行下载约 138 MB 的 float32 权重，图像不会传往服务器。
+这份演示用同一套模型分析两张公开的 Sentinel-2 测试切片。页面打开时提供本地 TensorFlow 实测图层，运行按钮在浏览器 Web Worker 中执行完整的 U-Net 推理。首次运行按分片下载约 138 MB 的 float32 权重，按 SHA-256 校验并缓存。连接中断时可切换备用线路，同一浏览器重新运行可复用已缓存的分片。图像不会传往服务器。
 
 数据和原始模型由 André Minoro Fusioka、Gabriel Henrique de Almeida Pereira、Bogdan Tomoyuki Nassu 和 Rodrigo Minetto 发布。[作者项目、数据和权重](https://github.com/Minoro/transfer-learning-landsat8-sentinel2) · [论文](https://doi.org/10.1109/JSTARS.2024.3436811) · [原项目许可](licenses/source-CC-BY-4.0.txt)。
 

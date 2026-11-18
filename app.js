@@ -54,7 +54,7 @@ async function loadCase(id) {
   byId("coverage").textContent=number(meta.valid)+" / 65,536 像素（"+(meta.valid/65536*100).toFixed(2)+"%）";
   byId("zoom").hidden=id!=="clear";
   byId("coordinate").textContent="点选影像查看经纬度";
-  byId("run-status").textContent=state.live?"已用浏览器完成复算。":"首次复算需加载约 138 MB 模型。";
+  byId("run-status").textContent=state.live?"已用浏览器完成复算。":"首次复算需加载约 138 MB，同一浏览器可复用已缓存的模型分片。";
   render();byId("run").disabled=false;
 }
 function draw() {
@@ -164,12 +164,18 @@ function run() {
   busy=true;byId("run").disabled=true;
   document.querySelectorAll("[data-case]").forEach(b=>b.disabled=true);
   const done=()=>{busy=false;byId("run").disabled=false;document.querySelectorAll("[data-case]").forEach(b=>b.disabled=false);};
-  const fail=message=>{byId("run-status").textContent="本次复算失败，可重试。"+message;if(worker){worker.terminate();worker=null;}done();};
+  let phase = "读取输入波段";
+  const fail = message => {
+    if (!busy) return;
+    byId("run-status").textContent = "本次复算失败。" + (message || ("浏览器在“" + phase + "”阶段中断。")) + " 可点击上方按钮重试。";
+    if (worker) { worker.terminate(); worker = null; }
+    done();
+  };
   byId("run-status").textContent="正在读取三个输入波段…";
-  try {worker??=new Worker("./worker.js");}catch(e){fail(e.message);return;}
-  worker.onerror=e=>fail(e.message);
+  try {worker??=new Worker("./worker.js?v=resume-v1");}catch(e){fail(e.message);return;}
+  worker.onerror=e=>fail(e.message ? phase + " · " + e.message : "");
   worker.onmessage=({data})=>{
-    if(data.type==="status"){byId("run-status").textContent=data.message;return;}
+    if(data.type==="status"){phase=data.message;byId("run-status").textContent=phase;return;}
     if(data.type==="error"){fail(data.message);return;}
     if(data.type!=="done")return;
     selected.mask=new Uint8Array(data.mask);selected.live=true;selected.peakIndex=data.maxIndex;selected.maxScore=data.maxScore;
