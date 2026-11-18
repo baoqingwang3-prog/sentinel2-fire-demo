@@ -1,5 +1,10 @@
 "use strict";
 const byId = id => document.getElementById(id);
+const serverMode = document.documentElement.dataset.inference === "server";
+const liveLabel = serverMode ? "服务器实算" : "浏览器实算";
+if (serverMode) {
+  byId("method-note").textContent = "服务器读取原始三个波段，运行同一 U-Net，以得分大于 0.5 判火。人工标注仅用于评估。页面初始显示已保存的实测结果。";
+}
 const canvas = byId("scene");
 const ctx = canvas.getContext("2d");
 const layer = document.createElement("canvas");
@@ -54,7 +59,7 @@ async function loadCase(id) {
   byId("coverage").textContent=number(meta.valid)+" / 65,536 像素（"+(meta.valid/65536*100).toFixed(2)+"%）";
   byId("zoom").hidden=id!=="clear";
   byId("coordinate").textContent="点选影像查看经纬度";
-  byId("run-status").textContent=state.live?"已用浏览器完成复算。":"首次复算需加载约 138 MB，同一浏览器可复用已缓存的模型分片。";
+  byId("run-status").textContent=state.live?"已完成"+liveLabel+"。":serverMode?"点击识别，服务器将读取这张切片并运行模型。":"首次复算需加载约 138 MB，同一浏览器可复用已缓存的模型分片。";
   render();byId("run").disabled=false;
 }
 function draw() {
@@ -115,7 +120,7 @@ function render() {
   byId("count-p").textContent=number(pred);byId("count-r").textContent=number(v.tp+v.fn);
   for(const k of ["tp","fp","fn"])byId(k).textContent=number(v[k]);
   byId("verdict").textContent=pred?"检出疑似活动火区":"有效区域未检出火像素";
-  byId("origin").textContent=state.live?"浏览器实算":"已保存的实测";
+  byId("origin").textContent=state.live?liveLabel:"已保存的实测";
   byId("locate").hidden=pred===0;
   byId("interpret").textContent=state.meta.id==="fire"?
     ("火区交并比 "+(100*v.tp/(v.tp+v.fp+v.fn)).toFixed(1)+"%。点击影像可核对每个像素的经纬度和标注。"):
@@ -158,6 +163,29 @@ function largestComponentPixel(mask) {
   }
   return chosen;
 }
+async function requestPrediction(id) {
+  const headers = {};
+  // Jupyter's same-origin proxy verifies this cookie for POST requests.
+  const xsrf = document.cookie.split("; ").find(part => part.startsWith("_xsrf="));
+  if (xsrf) headers["X-XSRFToken"] = decodeURIComponent(xsrf.slice(6));
+  const response = await fetch("./api/infer?id=" + encodeURIComponent(id), {
+    method: "POST", headers, cache: "no-store"
+  });
+  if (!response.ok) {
+    const detail = response.status === 429 || response.status === 503 ? "服务器忙，请稍后重试。" : "服务器未完成识别。";
+    throw new Error(detail + "（HTTP " + response.status + "）");
+  }
+  const mask = new Uint8Array(await response.arrayBuffer());
+  const peak = response.headers.get("X-Max-Index");
+  const score = response.headers.get("X-Max-Score");
+  const maxIndex = Number(peak), maxScore = Number(score);
+  if (mask.length !== 65536 || mask.some(x => x !== 0 && x !== 1 && x !== 255) ||
+      peak === null || score === null || !Number.isInteger(maxIndex) || maxIndex < 0 ||
+      maxIndex >= mask.length || !Number.isFinite(maxScore) || maxScore < 0 || maxScore > 1) {
+    throw new Error("服务器返回的预测数据不完整。");
+  }
+  return {mask: mask.buffer, maxIndex, maxScore};
+}
 function run() {
   if(!state||busy)return;
   const selected=state;
@@ -171,6 +199,17 @@ function run() {
     if (worker) { worker.terminate(); worker = null; }
     done();
   };
+  const finish = data => {
+    selected.mask=new Uint8Array(data.mask);selected.live=true;selected.peakIndex=data.maxIndex;selected.maxScore=data.maxScore;
+    const differences=selected.mask.reduce((n,v,i)=>n+(v!==selected.baseline[i]),0);
+    byId("run-status").textContent=differences?"复算完成；与本地基准有 "+differences+" 个像素不同。":"复算完成，全部 65,536 个像素与本地结果一致。";
+    render();if(selectedPixel!==undefined)pick(selectedPixel);done();
+  };
+  if (serverMode) {
+    byId("run-status").textContent = "服务器正在运行 U-Net，首次运行需要加载模型…";
+    requestPrediction(selected.meta.id).then(finish).catch(e => fail(e.message));
+    return;
+  }
   byId("run-status").textContent="正在读取三个输入波段…";
   try {worker??=new Worker("./worker.js?v=resume-v1");}catch(e){fail(e.message);return;}
   worker.onerror=e=>fail(e.message ? phase + " · " + e.message : "");
@@ -178,10 +217,7 @@ function run() {
     if(data.type==="status"){phase=data.message;byId("run-status").textContent=phase;return;}
     if(data.type==="error"){fail(data.message);return;}
     if(data.type!=="done")return;
-    selected.mask=new Uint8Array(data.mask);selected.live=true;selected.peakIndex=data.maxIndex;selected.maxScore=data.maxScore;
-    const differences=selected.mask.reduce((n,v,i)=>n+(v!==selected.baseline[i]),0);
-    byId("run-status").textContent=differences?"复算完成；与本地基准有 "+differences+" 个像素不同。":"复算完成，全部 65,536 个像素与本地结果一致。";
-    render();if(selectedPixel!==undefined)pick(selectedPixel);done();
+    finish(data);
   };
   get("./samples/"+selected.meta.id+"/bands.bin","arrayBuffer").then(bands=>worker.postMessage({bands},[bands])).catch(e=>fail(e.message));
 }

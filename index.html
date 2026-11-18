@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-inference="browser">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#122e25"><title>卫眸 · 卫星火区识别</title>
@@ -27,10 +27,10 @@
 <div class="key-stats"><div><small>AI 判火像素</small><strong id="count-p">—</strong></div><div><small>人工火像素</small><strong id="count-r">—</strong></div></div>
 <dl class="breakdown"><div><dt><i class="teal"></i>正确检出</dt><dd id="tp">—</dd></div><div><dt><i class="amber"></i>误报</dt><dd id="fp">—</dd></div><div><dt><i class="pink"></i>漏检</dt><dd id="fn">—</dd></div></dl>
 <p id="interpret" class="interpret"></p>
-<button class="run" id="run" disabled>运行 AI 识别 <span>→</span></button><div id="run-status" role="status" aria-live="polite">首次复算需加载约 138 MB 模型。</div>
+<button class="run" id="run" disabled>运行 AI 识别 <span>→</span></button><div id="run-status" role="status" aria-live="polite">读取中…</div>
 </aside></div>
-<details class="method"><summary>影像与判定方法</summary><dl><div><dt>切片编号</dt><dd id="case-id"></dd></div><div><dt>观测时间</dt><dd id="time"></dd></div><div><dt>有效观测</dt><dd id="coverage"></dd></div><div><dt>模型输入</dt><dd>B12、B11、B8A 三个波段，20 米网格。任一波段为零时跳过该像素。</dd></div><div><dt>判定依据</dt><dd>模型得分大于 0.5 时判为疑似活动火。只有评估阶段使用人工标注。页面初次显示本地实测结果，点击运行后使用原模型权重在浏览器内独立计算。</dd></div></dl></details>
+<details class="method"><summary>影像与判定方法</summary><dl><div><dt>切片编号</dt><dd id="case-id"></dd></div><div><dt>观测时间</dt><dd id="time"></dd></div><div><dt>有效观测</dt><dd id="coverage"></dd></div><div><dt>模型输入</dt><dd>B12、B11、B8A 三个波段，20 米网格。任一波段为零时跳过该像素。</dd></div><div><dt>判定依据</dt><dd id="method-note">模型得分大于 0.5 时判为疑似活动火。只有评估阶段使用人工标注。页面初次显示本地实测结果，点击运行后使用原模型权重在浏览器内独立计算。</dd></div></dl></details>
 <footer><span>数据与模型 · Fusioka 等，2024</span><span>Sentinel-2 MSI</span></footer>
 </main>
-<script src="./app.js?v=resume-v1" defer></script>
+<script src="./app.js?v=server-1" defer></script>
 </body></html>

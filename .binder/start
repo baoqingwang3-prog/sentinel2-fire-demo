@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+node "$HOME/server.cjs" --port 7777 &
+exec "$@"
