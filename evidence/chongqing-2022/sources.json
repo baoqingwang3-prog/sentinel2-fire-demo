@@ -1,0 +1,54 @@
+{
+  "selection": "Midpoint of published field study rectangle, pre-registered before running model",
+  "selectionSource": "https://www.mdpi.com/2071-1050/16/22/9717",
+  "rectangleDMS": {
+    "south": [
+      29,
+      45,
+      26.064
+    ],
+    "north": [
+      29,
+      48,
+      38.9448
+    ],
+    "west": [
+      106,
+      18,
+      49.3632
+    ],
+    "east": [
+      106,
+      22,
+      2.4564
+    ]
+  },
+  "archive": "https://storage.googleapis.com/gcp-public-data-sentinel-2/",
+  "assets": [
+    {
+      "name": "tiles/48/R/XT/S2B_MSIL1C_20220824T033539_N0400_R061_T48RXT_20220824T055942.SAFE/GRANULE/L1C_T48RXT_A028544_20220824T034751/IMG_DATA/T48RXT_20220824T033539_B11.jp2",
+      "size": "12257739",
+      "md5Hash": "hoNhfZNZg2ccyygpfeRXng=="
+    },
+    {
+      "name": "tiles/48/R/XT/S2B_MSIL1C_20220824T033539_N0400_R061_T48RXT_20220824T055942.SAFE/GRANULE/L1C_T48RXT_A028544_20220824T034751/IMG_DATA/T48RXT_20220824T033539_B12.jp2",
+      "size": "11831241",
+      "md5Hash": "BrP55rWV1NpsMsKRLECCGQ=="
+    },
+    {
+      "name": "tiles/48/R/XT/S2B_MSIL1C_20220824T033539_N0400_R061_T48RXT_20220824T055942.SAFE/GRANULE/L1C_T48RXT_A028544_20220824T034751/IMG_DATA/T48RXT_20220824T033539_B8A.jp2",
+      "size": "13018569",
+      "md5Hash": "OGOLxm8m326wmcevPwfajg=="
+    },
+    {
+      "name": "tiles/48/R/XT/S2B_MSIL1C_20220824T033539_N0400_R061_T48RXT_20220824T055942.SAFE/GRANULE/L1C_T48RXT_A028544_20220824T034751/MTD_TL.xml",
+      "size": "194596",
+      "md5Hash": "XqqKgoRJWd/kcJZCPWsfVQ=="
+    },
+    {
+      "name": "tiles/48/R/XT/S2B_MSIL1C_20220824T033539_N0400_R061_T48RXT_20220824T055942.SAFE/MTD_MSIL1C.xml",
+      "size": "45725",
+      "md5Hash": "SG6LMvlYnWDDVx5F9Zr9lg=="
+    }
+  ]
+}

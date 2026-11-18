@@ -1,0 +1,89 @@
+{
+  "entry_host": "2i2c.mybinder.org",
+  "routes": [
+    "terrain",
+    "real-cases"
+  ],
+  "predictions": [
+    {
+      "case": "simulation-point",
+      "method": "POST",
+      "query_keys": [
+        "id"
+      ],
+      "body_bytes": 393216,
+      "mask_bytes": 65536,
+      "detected_pixels": 13,
+      "nodata_pixels": 0,
+      "mask_sha256": "272bd1effeacd39126c568430e256509e902d012d1eaf9b29cfda0b188e0a314",
+      "server_ms": 9313,
+      "elapsed_seconds": 18.3,
+      "changed_input_pixels": 13,
+      "ui_distance": "0 米",
+      "ui_detection": "检出 13 个火像素 · 最大火斑 13 个像素"
+    },
+    {
+      "case": "simulation-control",
+      "method": "POST",
+      "query_keys": [
+        "id"
+      ],
+      "body_bytes": 393216,
+      "mask_bytes": 65536,
+      "detected_pixels": 0,
+      "nodata_pixels": 0,
+      "mask_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "server_ms": 10372,
+      "elapsed_seconds": 15.2,
+      "changed_input_pixels": 0,
+      "ui_distance": "—",
+      "ui_detection": "检出 0 个火像素 · 最大火斑 0 个像素"
+    },
+    {
+      "case": "fire",
+      "method": "POST",
+      "query_keys": [
+        "id"
+      ],
+      "body_bytes": 0,
+      "mask_bytes": 65536,
+      "detected_pixels": 255,
+      "nodata_pixels": 0,
+      "mask_sha256": "0392f90ed31f08ecbcd1311e68587558e138ebf0688ca3768180c685bbf8f269",
+      "server_ms": 7260,
+      "elapsed_seconds": 8.5
+    },
+    {
+      "case": "clear",
+      "method": "POST",
+      "query_keys": [
+        "id"
+      ],
+      "body_bytes": 0,
+      "mask_bytes": 65536,
+      "detected_pixels": 0,
+      "nodata_pixels": 63791,
+      "mask_sha256": "6bfc01619a2d3b6410a80cdfe5eedbdec1c5704cd3149bafe87057cac2316eca",
+      "server_ms": 7327,
+      "elapsed_seconds": 8.7
+    }
+  ],
+  "page_errors": [],
+  "asset_http_errors": [],
+  "browser_weight_requests": [],
+  "checks": {
+    "webgl": true,
+    "orbit_drag": true,
+    "hide_truth": true,
+    "review_hides_on_clear": true
+  },
+  "normal_public_navigation": true,
+  "launcher_seconds": 121.8,
+  "fire_location": "44.87440°, -113.43824° · AI 判火 / 人工有火",
+  "review": {
+    "boundary": "253 / 255 个预测像素中心落在最终过火边界内",
+    "temporal": "两期可比的判火像素 203 个。dNBR 中位数：判火区 0.288，其余可比区域 0.110。",
+    "images": 2
+  },
+  "status": "pass"
+}

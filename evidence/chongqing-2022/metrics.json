@@ -1,0 +1,59 @@
+{
+  "event": "2022 Chongqing Beibei Jinyun Mountain wildfire",
+  "source_scene": "S2B_MSIL1C_20220824T033539_N0400_R061_T48RXT_20220824T055942.SAFE",
+  "product_level": "L1C TOA",
+  "utc": "2022-08-24T03:49:58.016877Z",
+  "sampling": "Published post-fire survey rectangle midpoint chosen before inspecting spectra and predictions",
+  "region_reference": "https://www.mdpi.com/2071-1050/16/22/9717",
+  "same_date_independent_fireline_study": "https://doi.org/10.3390/rs17010140",
+  "archive": "https://storage.googleapis.com/gcp-public-data-sentinel-2/",
+  "bounds_for_selecting_center_wgs84": {
+    "south": 29.75724,
+    "north": 29.810818,
+    "west": 106.313712,
+    "east": 106.36734899999999
+  },
+  "requested_center_wgs84_lon_lat": [
+    106.3405305,
+    29.784029
+  ],
+  "grid": {
+    "epsg": 32648,
+    "affine": [
+      20.0,
+      0.0,
+      627000.0,
+      0.0,
+      -20.0,
+      3298180.0
+    ],
+    "shape": [
+      256,
+      256
+    ],
+    "pixel_m": 20
+  },
+  "bands": [
+    "B12",
+    "B11",
+    "B8A"
+  ],
+  "calibration": "Original SAFE L1C quantification 10000 and RADIO_ADD_OFFSET -1000 for all three bands. Subtract 1000 once, existing server divides by 10000. A source nodata/saturated or nonpositive calibrated band makes the pixel invalid.",
+  "source_nodata_pixels": 0,
+  "source_saturated_pixels": 0,
+  "nonpositive_valid_source_pixels": 0,
+  "valid_pixels": 65536,
+  "predicted_pixels": 641,
+  "threshold": "score > 0.5; unchanged deployed inference endpoint",
+  "post_body_sha256": "23117ce114c60b474df203b17f7147a072e6fa890ff4f8af2c271266c6104af1",
+  "post_body_bytes": 393216,
+  "mask_sha256": "4c1eeb0493ae5de13f9879b23d0c2ce8a219bc23a72ab3263fb76e3771468d6c",
+  "inference_ms": "11761",
+  "accuracy_reference": "No synchronous digitized independent pixel reference used. Detection counts are model outputs, not validated localization accuracy.",
+  "detection_bbox_wgs84": [
+    106.31412487458739,
+    29.77474663474887,
+    106.35351667011848,
+    29.799443086646612
+  ]
+}

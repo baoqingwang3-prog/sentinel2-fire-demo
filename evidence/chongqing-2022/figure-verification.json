@@ -1,0 +1,37 @@
+{
+  "scene": "S2B_MSIL1C_20220824T033539_N0400_R061_T48RXT_20220824T055942.SAFE",
+  "time_utc": "2022-08-24T03:49:58.016877Z",
+  "TCI_source": "https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/48/R/XT/S2B_MSIL1C_20220824T033539_N0400_R061_T48RXT_20220824T055942.SAFE/GRANULE/L1C_T48RXT_A028544_20220824T034751/IMG_DATA/T48RXT_20220824T033539_TCI.jp2",
+  "TCI_google_md5_base64": "TV67pfzCjzdCOGy3xdD7jQ==",
+  "native_TCI_m": 10,
+  "native_SWIR_m": 20,
+  "alignment": "Exact integer 512x512 window on the same UTM48N grid, block-averaged 2x2 to the 256x256 prediction grid; no reprojection or geocoding.",
+  "TCI_window_10m": {
+    "col_offset": 2700,
+    "row_offset": 182,
+    "width": 512,
+    "height": 512
+  },
+  "grid": {
+    "epsg": 32648,
+    "affine": [
+      20.0,
+      0.0,
+      627000.0,
+      0.0,
+      -20.0,
+      3298180.0
+    ],
+    "shape": [
+      256,
+      256
+    ],
+    "pixel_m": 20
+  },
+  "predicted": 641,
+  "observed_valid": 65536,
+  "model_input_sha256": "23117ce114c60b474df203b17f7147a072e6fa890ff4f8af2c271266c6104af1",
+  "mask_sha256": "4c1eeb0493ae5de13f9879b23d0c2ce8a219bc23a72ab3263fb76e3771468d6c",
+  "rgb_sha256": "27b6053ef394c2238d27710ad29208b4a3bf89a6dde7e5f024029386decdd859",
+  "figure_sha256": "51347601c198a0c95e7bde631637fd08482fa607153022a18436163b0ad27ff3"
+}
