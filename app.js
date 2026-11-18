@@ -3,6 +3,7 @@ const byId = id => document.getElementById(id);
 const serverMode = document.documentElement.dataset.inference === "server";
 const liveLabel = serverMode ? "服务器实算" : "浏览器实算";
 if (serverMode) {
+  byId("terrain-link").hidden=false;
   byId("method-note").textContent = "服务器读取原始三个波段，运行同一 U-Net，以得分大于 0.5 判火。人工标注仅用于评估。页面初始显示已保存的实测结果。";
 }
 const canvas = byId("scene");
@@ -116,6 +117,7 @@ function legend() {
   }));
 }
 function render() {
+  selectReview(state);
   const v=metrics(state.mask,state.ref),pred=v.tp+v.fp;
   byId("count-p").textContent=number(pred);byId("count-r").textContent=number(v.tp+v.fn);
   for(const k of ["tp","fp","fn"])byId(k).textContent=number(v[k]);

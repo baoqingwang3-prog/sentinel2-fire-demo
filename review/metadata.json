@@ -1,0 +1,120 @@
+{
+  "schema": "sentinel2-temporal-v1",
+  "sample": "fire",
+  "grid": {
+    "width": 256,
+    "height": 256,
+    "rowOrder": "north-to-south",
+    "columnOrder": "west-to-east",
+    "pixelMetres": 20,
+    "crs": "EPSG:32612",
+    "affine": [
+      20.0,
+      0.0,
+      305120.0,
+      0.0,
+      -20.0,
+      4974440.0
+    ],
+    "bounds": [
+      305120.0,
+      4969320.0,
+      310240.0,
+      4974440.0
+    ]
+  },
+  "detectionDate": "2020-08-13",
+  "beforeDate": "2020-07-27",
+  "afterDate": "2020-09-02",
+  "periodMeaning": "A baseline before the detected active fire and a later observation. The later date does not certify the official end of this fire.",
+  "source": "Contains modified Copernicus Sentinel-2 data (2020). STAC catalogue: Element 84 Earth Search.",
+  "scenes": {
+    "before": {
+      "id": "S2A_12TUQ_20200727_0_L2A",
+      "date": "2020-07-27T18:41:57.046000Z",
+      "item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_12TUQ_20200727_0_L2A",
+      "sceneCloudPercent": 5.783167,
+      "assets": {
+        "nir08": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/T/UQ/2020/7/S2A_12TUQ_20200727_0_L2A/B8A.tif",
+        "swir22": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/T/UQ/2020/7/S2A_12TUQ_20200727_0_L2A/B12.tif",
+        "scl": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/T/UQ/2020/7/S2A_12TUQ_20200727_0_L2A/SCL.tif"
+      },
+      "scl45PositivePixels": 64824
+    },
+    "after": {
+      "id": "S2A_12TUQ_20200902_0_L2A",
+      "date": "2020-09-02T18:31:59.876000Z",
+      "item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_12TUQ_20200902_0_L2A",
+      "sceneCloudPercent": 0.394348,
+      "assets": {
+        "nir08": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/T/UQ/2020/9/S2A_12TUQ_20200902_0_L2A/B8A.tif",
+        "swir22": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/T/UQ/2020/9/S2A_12TUQ_20200902_0_L2A/B12.tif",
+        "scl": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/T/UQ/2020/9/S2A_12TUQ_20200902_0_L2A/SCL.tif"
+      },
+      "scl45PositivePixels": 55754
+    }
+  },
+  "method": {
+    "index": "NBR = (B8A - B12)/(B8A + B12)",
+    "delta": "NBR(2020-07-27) - NBR(2020-09-02)",
+    "reflectanceScale": 0.0001,
+    "reflectanceOffset": 0,
+    "valid": "Require Sentinel-2 L2A scene classification 4 (vegetated) or 5 (bare) and both reflectances > 0 in both dates. Each NBR PNG masks its own date.",
+    "scienceReference": "https://eo4society.esa.int/wp-content/uploads/2019/10/Exercise_MachineLearning_DStavrakoudis.pdf#page=11",
+    "interpretation": "A larger positive dNBR is consistent with greater spectral change. It is not an independent fire label or an exhaustive burned-area perimeter."
+  },
+  "files": {
+    "before": "before.png",
+    "after": "after.png",
+    "valid": "valid.bin",
+    "dnbr": "dnbr.i16"
+  },
+  "encoding": {
+    "dnbr": "little-endian signed int16, row-major; divide by 10000; 32767 is invalid",
+    "valid": "uint8 row-major; 1 = jointly usable, 0 = invalid"
+  },
+  "colors": {
+    "quantity": "NBR",
+    "stops": [
+      {
+        "value": -1,
+        "color": "#794622"
+      },
+      {
+        "value": -0.5,
+        "color": "#b67a40"
+      },
+      {
+        "value": 0,
+        "color": "#ebd7a7"
+      },
+      {
+        "value": 0.5,
+        "color": "#76afa0"
+      },
+      {
+        "value": 1,
+        "color": "#075963"
+      }
+    ],
+    "invalid": "transparent"
+  },
+  "summary": {
+    "allPixels": 65536,
+    "comparablePixels": 55103,
+    "comparableFraction": 0.8408050537109375,
+    "detectedFirePixels": 255,
+    "comparableDetectedFirePixels": 203,
+    "comparableOtherPixels": 54900,
+    "fireMedianDnbr": 0.2880115404394781,
+    "otherMedianDnbr": 0.10998418231894164,
+    "encodedFireMedianDnbr": 0.288,
+    "encodedOtherMedianDnbr": 0.11
+  },
+  "sha256": {
+    "after.png": "c1fbdbef22978b1daadf3de2ab0a9e247066750e9cac1b6d20dde5e2419eeece",
+    "before.png": "aa06710a7de6c8643d4ce261c9c03a9b6183e939befdbd81a834bbfc17992296",
+    "dnbr.i16": "8bfdbacbe8f15066856a0cb7c8b9a762fd1a28dc5049d458b65e2250bce1dd7f",
+    "valid.bin": "3302232278910867d34171ef44f9671e219a41c14957395e44728585b658ad19"
+  }
+}

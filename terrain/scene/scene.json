@@ -1,0 +1,50 @@
+{
+  "name": "大提顿国家公园 · 塔格特湖山区",
+  "date": "2020-08-10",
+  "satellite": "Sentinel-2A",
+  "timestamp": "2020-08-10T18:22:11.378000Z",
+  "pixelSize": 20,
+  "width": 256,
+  "height": 256,
+  "crs": "EPSG:32612",
+  "affine": [
+    20.0,
+    0.0,
+    515560.0,
+    0.0,
+    -20.0,
+    4842480.0
+  ],
+  "elevationMin": 2025.2947998046875,
+  "elevationMax": 3627.125,
+  "sourceId": "S2A_12TWP_20200810_1_L2A",
+  "product": "S2A_MSIL2A_20200810T180921_N0500_R084_T12TWP_20230317T072217.SAFE",
+  "sceneCloudPercent": 1.453124,
+  "sources": {
+    "satellite": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/T/WP/2020/8/S2A_12TWP_20200810_1_L2A/S2A_12TWP_20200810_1_L2A.json",
+    "dem": "https://copernicus-dem-30m.s3.eu-central-1.amazonaws.com/Copernicus_DSM_COG_10_N43_00_W111_00_DEM/Copernicus_DSM_COG_10_N43_00_W111_00_DEM.tif",
+    "copernicusDEMInfo": "https://registry.opendata.aws/copernicus-dem/",
+    "demLicense": "https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM"
+  },
+  "validPixels": 65536,
+  "sclClassCounts": {
+    "2": 3214,
+    "4": 38243,
+    "5": 21242,
+    "6": 1783,
+    "7": 152,
+    "11": 902
+  },
+  "radiometry": "COG has BOA offset already applied (earthsearch:boa_offset_applied=true); model input is three stored DNs divided by 10000.",
+  "terrain": "Copernicus DEM GLO-30 digital surface elevations in metres; bilinear projected onto the 20 m MSI grid.",
+  "credit": "Contains modified Copernicus Sentinel data 2020. Terrain produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved.",
+  "demDisclaimer": "The organisations in charge of the Copernicus programme by law or by delegation do not incur any liability for any use of the Copernicus WorldDEM-30.",
+  "rgbSource": "Copernicus Sentinel-2 L2A true-colour image, 10 m; the same acquisition and footprint as the multispectral bands.",
+  "groundTruth": "This scene has no independent active-fire field labels. The uninjected scan is a model control.",
+  "checksums": {
+    "bands.bin": "df650bc42a859ffb4dc1a5bc7f6a840f55f79cbc25d9e90dc0aaffa1876a97d1",
+    "terrain.bin": "342882ad86ab18078720fd8106b12e984d030adaff51148640b9f10ce55db63d",
+    "coordinates.bin": "1a8ebbe01bf1ac8bed2e107edde2573cbccf9c83779dd2e2acf5aee75f85dbef",
+    "rgb.jpg": "d4cc7b631935572761f37fe22a9a6484d4f946eac66ea9b2a1016786cb658b79"
+  }
+}

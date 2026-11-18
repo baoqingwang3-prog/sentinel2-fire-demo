@@ -14,7 +14,7 @@ if (location.hostname === "baoqingwang3-prog.github.io" &&
 <body>
 <header><div class="header-core"><div class="brand"><span class="brand-icon" aria-hidden="true"><i></i></span><span>卫眸</span><span class="brand-sep"></span><span class="brand-en">SENTINEL-2</span></div><a href="https://github.com/Minoro/transfer-learning-landsat8-sentinel2" target="_blank" rel="noreferrer">模型来源 ↗</a></div></header>
 <main>
-<section class="intro"><div><h1>卫星火区识别</h1><p>切换真实卫星影像，比较 AI 圈出的疑似火区与专家标注。</p></div><div class="pipeline"><span class="dot"></span> U-Net <span>/</span> 20 m</div></section>
+<section class="intro"><div><h1>卫星火区识别</h1><p>切换真实卫星影像，比较 AI 圈出的疑似火区与专家标注。</p></div><a class="terrain-link" id="terrain-link" href="./terrain/" hidden>进入三维盲测 ↗</a><div class="pipeline"><span class="dot"></span> U-Net <span>/</span> 20 m</div></section>
 <section class="selector" aria-label="选择测试切片">
 <button type="button" class="sample selected" data-case="fire" aria-pressed="true"><img src="./samples/fire/swir.png" alt=""><span><b>有火切片</b><small>T12TUQ · 2020.08.13</small></span><em aria-hidden="true">✓</em></button>
 <button type="button" class="sample" data-case="clear" aria-pressed="false"><img src="./samples/clear/thumb.png" alt=""><span><b>无火切片</b><small>T52VFQ · 2020.08.21</small></span><em aria-hidden="true">✓</em></button>
@@ -34,9 +34,26 @@ if (location.hostname === "baoqingwang3-prog.github.io" &&
 <dl class="breakdown"><div><dt><i class="teal"></i>正确检出</dt><dd id="tp">—</dd></div><div><dt><i class="amber"></i>误报</dt><dd id="fp">—</dd></div><div><dt><i class="pink"></i>漏检</dt><dd id="fn">—</dd></div></dl>
 <p id="interpret" class="interpret"></p>
 <button class="run" id="run" disabled>运行 AI 识别 <span>→</span></button><div id="run-status" role="status" aria-live="polite">读取中…</div>
+<button id="review-open" type="button" aria-controls="review-box" aria-expanded="false" hidden>复核这个火斑 ↓</button>
 </aside></div>
+<section id="review-box" class="evidence" hidden>
+  <h2>Bear Creek · 事件复核</h2>
+  <p id="review-result" role="status"></p>
+  <div class="dates">
+    <figure><img loading="lazy" src="./review/before.png" alt="7月27日基线燃烧指数图"><figcaption>07.27 · 火前 NBR</figcaption></figure>
+    <figure><canvas id="review-scene" width="256" height="256" aria-label="橙色为当天AI预测，青线为官方事后过火边界"></canvas><figcaption>08.13 · AI 火斑 / 最终边界</figcaption></figure>
+    <figure><img loading="lazy" src="./review/after.png" alt="9月2日后续燃烧指数图"><figcaption>09.02 · 后续 NBR</figcaption></figure>
+  </div>
+  <details><summary>观测依据与来源</summary>
+    <p>中图橙色为当天预测，青线为 MTBS 最终边界。前后两图用同一 NBR 色标，棕色为低值，蓝绿色为高值，空白处缺测。</p>
+    <p id="review-change"></p>
+    <p><a href="https://burnseverity.cr.usgs.gov/baer/baer-imagery-support-data-download/2020/bear-creek" target="_blank" rel="noreferrer">USGS 事件档案</a> · <a href="https://apps.fs.usda.gov/ArcX/rest/services/EDW/EDW_MTBS_01/MapServer/75/1072461" target="_blank" rel="noreferrer">MTBS 边界</a> · <a href="https://www.nifc.gov/sites/default/files/NICC/1-Incident%20Information/IMSR/2020/August/20200813IMSR.pdf#page=4" target="_blank" rel="noreferrer">8 月 13 日消防通报</a> · <a href="./review/metadata.json" target="_blank">两期 Sentinel-2 影像来源</a></p>
+    <small>Contains modified Copernicus Sentinel data 2020.</small>
+  </details>
+</section>
 <details class="method"><summary>影像与判定方法</summary><dl><div><dt>切片编号</dt><dd id="case-id"></dd></div><div><dt>观测时间</dt><dd id="time"></dd></div><div><dt>有效观测</dt><dd id="coverage"></dd></div><div><dt>模型输入</dt><dd>B12、B11、B8A 三个波段，20 米网格。任一波段为零时跳过该像素。</dd></div><div><dt>判定依据</dt><dd id="method-note">模型得分大于 0.5 时判为疑似活动火。只有评估阶段使用人工标注。页面初次显示本地实测结果，点击运行后使用原模型权重在浏览器内独立计算。</dd></div></dl></details>
 <footer><span>数据与模型 · Fusioka 等，2024</span><span>Sentinel-2 MSI</span></footer>
 </main>
-<script src="./app.js?v=server-1" defer></script>
+<script src="./review.js" defer></script>
+<script src="./app.js?v=review-1" defer></script>
 </body></html>

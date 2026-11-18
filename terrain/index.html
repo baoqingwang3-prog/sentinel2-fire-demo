@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#172821">
+  <title>卫眸 · 三维山火模拟定位</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three/three.module.js"}}</script>
+  <script type="module" src="./mountain.js"></script>
+</head>
+<body>
+  <header class="mast">
+    <div class="brand"><i class="brandmark" aria-hidden="true"></i><strong>卫眸</strong><span class="brand-sub">卫星火区识别</span></div>
+    <a class="back" href="../index.html">← 返回真实案例</a>
+  </header>
+  <main id="experiment" data-state="loading">
+    <div class="intro">
+      <div><h1>三维点火盲测</h1><p>点选山坡添加模拟火信号，查看云端 AI 给出的位置。</p></div>
+      <div class="snapshot"><span id="satellite">Sentinel-2</span><span>20 m / 像素</span></div>
+    </div>
+    <div class="workspace">
+      <section class="mapcard" aria-labelledby="map-title">
+        <div class="map-top"><h2 id="map-title">山地实景</h2><button type="button" class="map-tool" id="reset" disabled>复位视角</button></div>
+        <div id="stage">
+          <canvas id="terrain-canvas" aria-label="三维山地，点击地面模拟点火。也可使用右侧随机点火按钮。"></canvas>
+          <div class="map-place"><strong id="scene-name">正在读取影像…</strong><span id="scene-date"></span></div>
+          <div class="north" aria-label="指北针"><span>N</span><i id="north-arrow"></i></div>
+          <div id="markers" aria-hidden="true"><span id="truth-pin" class="pin truth" hidden><i></i><b>模拟点</b></span><span id="ai-pin" class="pin predicted" hidden><i></i><b>AI</b></span></div>
+          <span id="view-mode">三维地形</span><span id="probe"></span>
+        </div>
+        <div class="map-foot"><span id="navigation">单击点火 · 拖动旋转 · 滚轮缩放</span><span class="legend"><i class="orange"></i> 模拟点 <i class="mint"></i> AI 火区</span></div>
+      </section>
+      <aside class="panel">
+        <section class="actions-box">
+          <h2>点火盲测</h2>
+          <div class="formrow"><label for="strength">模拟信号</label><select id="strength"><option value="1">标准 · 100%</option><option value="0.4">较弱 · 40%</option><option value="0.1">微弱 · 10%</option></select></div>
+          <button class="primary" id="random" disabled>随机点火并识别 <span aria-hidden="true">↗</span></button>
+          <button class="secondary" id="clear" disabled>原图对照（不点火）</button>
+          <label class="toggle"><input type="checkbox" checked id="truth-toggle"> 显示模拟点位置</label>
+          <div class="status-line"><i></i><p role="status" id="status">正在载入山地影像…</p></div>
+        </section>
+        <section class="result-box">
+          <h2>定位结果</h2>
+          <div class="result-main"><span>距模拟中心</span><strong id="distance">—</strong></div>
+          <dl class="coords"><div><dt><i class="orange"></i>模拟点</dt><dd id="truth-coord">—</dd></div><div><dt><i class="mint"></i>AI 检出</dt><dd id="ai-coord">—</dd></div></dl>
+          <p id="counts">等待识别</p>
+        </section>
+      </aside>
+    </div>
+    <details class="method"><summary>场景数据与判定方法</summary>
+      <p id="scene-info"></p><p>底图使用真实卫星 RGB 影像与同区域高程。模拟点火在 13 个邻近像素中加入合成光谱信号。云端 U-Net 只读取 B12、B11、B8A 三个波段，得分大于 0.5 的像素判火。定位点取最大连续火斑中最靠近其重心的像素。距离按 20 米地面网格计算，0 米表示两个中心落在同一像素。</p>
+      <p id="sources"></p>
+      <p id="credit" lang="en"></p>
+      <p><a id="scene-source" target="_blank" rel="noreferrer">卫星影像目录</a> · <a id="dem-source" target="_blank" rel="noreferrer">高程数据与许可</a> · <a href="https://github.com/Minoro/transfer-learning-landsat8-sentinel2" target="_blank" rel="noreferrer">模型出处</a> · <a href="./vendor/three/LICENSE">Three.js 许可</a></p>
+    </details>
+  </main>
+</body>
+</html>

@@ -83,11 +83,30 @@ async function loadModel() {
   return { tf, network };
 }
 
-async function compute(id) {
+const inputBytes = 256 * 256 * 3 * 2;
+async function readObservation(req) {
+  if (req.headers["content-type"]?.split(";")[0].trim() !== "application/octet-stream") {
+    throw Object.assign(new Error("Expected a binary image"), {status:415});
+  }
+  const length = req.headers["content-length"];
+  if (length !== undefined && Number(length) !== inputBytes) {
+    throw Object.assign(new Error("Incorrect observation size"), {status:Number(length)>inputBytes ? 413 : 400});
+  }
+  const image = Buffer.alloc(inputBytes);
+  let count = 0;
+  for await (const chunk of req) {
+    if (count + chunk.length > image.length) throw Object.assign(new Error("Observation too large"), {status:413});
+    chunk.copy(image, count);
+    count += chunk.length;
+  }
+  if (count !== image.length) throw Object.assign(new Error("Incomplete observation"), {status:400});
+  return image;
+}
+
+async function compute(id, observation) {
   if (!modelPromise) modelPromise = loadModel().catch(error => { modelPromise = undefined; throw error; });
   const { tf, network } = await modelPromise;
-  const samplePath = exampleRepo ? path.join(root, "samples", id, "bands.bin") : path.join(root, "inputs", id + ".bin");
-  const raw = await fs.readFile(samplePath);
+  const raw = observation || await fs.readFile(exampleRepo ? path.join(root, "samples", id, "bands.bin") : path.join(root, "inputs", id + ".bin"));
   const n = 256 * 256;
   if (raw.length !== n * 3 * 2) throw new Error("Invalid sample size");
   const bands = new Uint16Array(raw.buffer, raw.byteOffset, n * 3);
@@ -124,12 +143,13 @@ module.exports = async function infer(req, res) {
   if (req.method === "OPTIONS") { res.statusCode = 204; return res.end(); }
   if (req.method !== "POST") { res.setHeader("Allow", "POST, OPTIONS"); res.statusCode = 405; return res.end("Use POST"); }
   const id = new URL(req.url, "http://localhost").searchParams.get("id");
-  if (!acceptedIds.has(id)) { res.statusCode = 400; return res.end("Unknown sample"); }
+  if (id !== "simulation" && !acceptedIds.has(id)) { res.statusCode = 400; return res.end("Unknown sample"); }
   if (pending >= 3) { res.statusCode = 429; res.setHeader("Retry-After", "5"); return res.end("Server busy"); }
   pending++;
-  const computation = queue.then(() => compute(id));
-  queue = computation.catch(() => {});
   try {
+    const observation = id === "simulation" ? await readObservation(req) : null;
+    const computation = queue.then(() => compute(id, observation));
+    queue = computation.catch(() => {});
     const {mask, maxIndex, maxScore, elapsed} = await computation;
     res.setHeader("Content-Type","application/octet-stream");
     res.setHeader("Content-Length",mask.length.toString());
@@ -138,6 +158,7 @@ module.exports = async function infer(req, res) {
     res.setHeader("X-Inference-Ms",String(elapsed));
     res.end(mask);
   } catch (error) {
+    if (error.status) { res.statusCode = error.status; return res.end(error.message); }
     console.error("Server inference failed:", String(error.message).slice(0,250));
     res.statusCode = 503; res.end("Server inference unavailable; please retry.");
   } finally { pending--; }
