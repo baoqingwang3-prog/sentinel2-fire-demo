@@ -5,6 +5,37 @@ let loading;
 function notify(message) {
   self.postMessage({type: "status", message});
 }
+
+// A cold start needs every weight shard. Limit simultaneous downloads and
+// retry the whole response body if the connection breaks after the headers.
+function createModelFetcher() {
+  const slots = Array.from({length: 4}, () => Promise.resolve());
+  let next = 0;
+  async function download(url, options) {
+    for (let attempt = 0; attempt < 4; attempt++) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 120000);
+      try {
+        const response = await fetch(url, {...options, signal: controller.signal});
+        if (!response.ok) throw new Error(`模型下载返回 HTTP ${response.status}`);
+        const bytes = await response.arrayBuffer();
+        return new Response(bytes, {headers: response.headers, status: response.status});
+      } catch (error) {
+        if (attempt === 3) throw error;
+      } finally {
+        clearTimeout(timer);
+      }
+      await new Promise(resolve => setTimeout(resolve, 1000 * 2 ** attempt));
+    }
+  }
+  return (url, options) => {
+    const slot = next++ % slots.length;
+    const request = slots[slot].then(() => download(url, options));
+    slots[slot] = request.catch(() => {});
+    return request;
+  };
+}
+
 async function getModel() {
   if (!loading) {
     loading = (async () => {
@@ -14,6 +45,7 @@ async function getModel() {
       await tf.ready();
       notify("正在加载模型…");
       return await tf.loadLayersModel(new URL("./model/model.json", self.location.href).href, {
+        fetchFunc: createModelFetcher(),
         onProgress: ratio => notify("正在加载模型 " + Math.round(ratio * 100) + "%")
       });
     })().catch(error => { loading = undefined; throw error; });
